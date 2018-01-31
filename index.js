@@ -18,6 +18,7 @@ fetch(dataUrl)
                 return {
                     date,
                     duration,
+                    minutes: seconds / 60,
                     seconds,
                     isTracked: +hasC > 0
                 };
@@ -25,17 +26,17 @@ fetch(dataUrl)
         const data = {
             labels: standups.map(s => s.date),
             datasets: [{
-                values: standups.map(s => s.seconds)
+                values: standups.map(s => s.minutes)
             }],
             specific_values: [{
                 title: 'Target',
                 line_type: 'dashed',
-                value: 15*60
+                value: 15
             }]
         };
         const chart = new Chart({
             parent: '#chart',
-            title: 'Standup Durations (sec)',
+            title: 'Standup Durations (min)',
             data,
             type: 'line',
             height: 250,
@@ -43,8 +44,8 @@ fetch(dataUrl)
             region_fill: 1,
             is_series: 1,
             format_tooltip_y: d => {
-                const minutes = Math.floor(d / 60);
-                const seconds = d % 60;
+                const minutes = Math.floor(d);
+                const seconds = (d * 60) % 60;
                 return `${minutes}:${seconds}`;
             }
         });
