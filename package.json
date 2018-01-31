@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-env": "^1.6.1",
     "frappe-charts": "0.0.8"
   }
 }
