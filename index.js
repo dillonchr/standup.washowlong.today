@@ -1,4 +1,5 @@
 import Chart from 'frappe-charts/dist/frappe-charts.min.esm';
+import './style.css';
 
 const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQtcYrAF_O8sgP1VuIgbFpOXhTp1yRiMaeYKLIUroA0zwWikEo4Vs5Jf8WoCQfVNzWISdygU0_ji1F8/pub?output=tsv';
 fetch(dataUrl)
