@@ -8,7 +8,7 @@ fetch(dataUrl)
             .split('\n')
             .slice(1)
             .map(r => {
-                const [date, duration, hasC] = r.split('\t');
+                const [date, duration, tracked] = r.split('\t');
                 const seconds = duration.split(':').reduce((sum, cur, i) => {
                     if (i === 0) {
                         return cur * 60;
@@ -20,7 +20,7 @@ fetch(dataUrl)
                     duration,
                     minutes: seconds / 60,
                     seconds,
-                    isTracked: +hasC > 0
+                    isTracked: +tracked > 0
                 };
             });
         const data = {

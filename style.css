@@ -11,3 +11,14 @@ header {
 h1 {
     margin: 0;
 }
+footer {
+    margin-top: 3rem;
+    padding: 1rem;
+    text-align: center;
+}
+.github-logo {
+    width: 3rem;
+}
+.github-logo path {
+    fill: #B721FF;
+}
