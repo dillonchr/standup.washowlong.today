@@ -20,20 +20,27 @@ fetch(dataUrl)
                     date,
                     duration,
                     minutes: seconds / 60,
-                    seconds,
                     isTracked: +tracked > 0
                 };
-            });
+            })
+            .filter(s => s.isTracked);
         const data = {
             labels: standups.map(s => s.date),
             datasets: [{
                 values: standups.map(s => s.minutes)
             }],
-            specific_values: [{
-                title: 'Target',
-                line_type: 'dashed',
-                value: 15
-            }]
+            specific_values: [
+                {
+                    title: 'Target',
+                    line_type: 'dashed',
+                    value: 15
+                },
+                {
+                    title: 'Average',
+                    line_type: 'dashed',
+                    value: standups.reduce((sum, t) => sum + t.minutes, 0) / standups.length
+                }
+            ]
         };
         const chart = new Chart({
             parent: '#chart',
@@ -47,7 +54,7 @@ fetch(dataUrl)
             format_tooltip_y: d => {
                 const minutes = Math.floor(d);
                 const seconds = (d * 60) % 60;
-                return `${minutes}:${seconds}`;
+                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
             }
         });
     });
