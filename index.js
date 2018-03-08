@@ -24,23 +24,28 @@ fetch(dataUrl)
                 };
             })
             .filter(s => s.isTracked);
+        const displayedStandups = standups.slice(standups.length - 11);
+        const specific_values = [
+            {
+                title: 'Target',
+                line_type: 'dashed',
+                value: 15
+            }
+        ];
+        const average = standups.reduce((sum, t) => sum + t.minutes, 0) / standups.length;
+        if (Math.abs(average - 15) > 5) {
+            specific_values.push({
+                title: 'Average',
+                line_type: 'dashed',
+                value: average
+            });
+        }
         const data = {
-            labels: standups.map(s => s.date),
+            labels: displayedStandups.map(s => s.date),
             datasets: [{
-                values: standups.map(s => s.minutes)
+                values: displayedStandups.map(s => s.minutes)
             }],
-            specific_values: [
-                {
-                    title: 'Target',
-                    line_type: 'dashed',
-                    value: 15
-                },
-                {
-                    title: 'Average',
-                    line_type: 'dashed',
-                    value: standups.reduce((sum, t) => sum + t.minutes, 0) / standups.length
-                }
-            ]
+            specific_values
         };
         const chart = new Chart({
             parent: '#chart',
