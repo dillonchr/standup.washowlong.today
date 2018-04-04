@@ -11,6 +11,19 @@ header {
 h1 {
     margin: 0;
 }
+h2 {
+    text-align: center;
+}
+#standup-count,
+#standup-average {
+    font-size: 2rem;
+}
+#standup-average.over-target {
+    color: #CF3736;
+}
+#standup-average {
+    color: #009221;
+}
 footer {
     margin-top: 3rem;
     padding: 1rem;
@@ -22,7 +35,6 @@ footer {
 .github-logo path {
     fill: #B721FF;
 }
-
 @media (min-width: 768px) {
     header {
         padding: 3rem;

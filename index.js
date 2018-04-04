@@ -1,5 +1,4 @@
 import Chart from 'frappe-charts/dist/frappe-charts.min.esm';
-import './style.css';
 
 const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQtcYrAF_O8sgP1VuIgbFpOXhTp1yRiMaeYKLIUroA0zwWikEo4Vs5Jf8WoCQfVNzWISdygU0_ji1F8/pub?output=tsv';
 fetch(dataUrl)
@@ -16,6 +15,7 @@ fetch(dataUrl)
                     }
                     return +cur + sum;
                 }, 0);
+                console.log('calculated', seconds, 'to be', (seconds / 60).toFixed(2));
                 return {
                     date,
                     duration,
@@ -24,7 +24,9 @@ fetch(dataUrl)
                 };
             })
             .filter(s => s.isTracked);
-        const displayedStandups = standups.slice(standups.length - 11);
+
+        const displayedStandups = standups.slice(standups.length - 10);
+
         const specific_values = [
             {
                 title: 'Target',
@@ -33,6 +35,7 @@ fetch(dataUrl)
             }
         ];
         const average = standups.reduce((sum, t) => sum + t.minutes, 0) / standups.length;
+
         if (Math.abs(average - 15) > 5) {
             specific_values.push({
                 title: 'Average',
@@ -40,6 +43,7 @@ fetch(dataUrl)
                 value: average
             });
         }
+
         const data = {
             labels: displayedStandups.map(s => s.date),
             datasets: [{
@@ -47,19 +51,27 @@ fetch(dataUrl)
             }],
             specific_values
         };
+
+        const dataToMinuteStamp = d => {
+            const minutes = Math.floor(d);
+            const seconds = (d * 60) % 60;
+            return `${minutes}:${seconds.toString().substr(0, 2).padStart(2, '0')}`;
+        };
+
         const chart = new Chart({
             parent: '#chart',
-            title: 'Standup Durations (min)',
+            title: '10 Latest standup durations (min)',
             data,
             type: 'line',
             height: 250,
             colors: ['#08AEEA'],
             region_fill: 1,
             is_series: 1,
-            format_tooltip_y: d => {
-                const minutes = Math.floor(d);
-                const seconds = (d * 60) % 60;
-                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
+            format_tooltip_y: dataToMinuteStamp
         });
+
+        document.querySelector('#standup-count').textContent = standups.length;
+        const averageElem = document.querySelector('#standup-average');
+        averageElem.textContent = dataToMinuteStamp(average);
+        averageElem.classList.toggle('over-target', average > 15);
     });
