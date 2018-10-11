@@ -1,10 +1,12 @@
-FROM mhart/alpine-node:10.7.0 as build
+FROM mhart/alpine-node:10.7.0 AS build
 WORKDIR /code/
-RUN npm i -g parcel-bundler
+RUN apk update && apk upgrade && apk add git
+RUN npm i -g parcel-bundler > /dev/null
 COPY package*.json ./
 RUN npm i > /dev/null
 COPY . .
 RUN npm run build
 
-FROM bitnami/nginx:1.14.0-debian-9
-COPY --from=build /code/dist/. /app/
+FROM nginx:1.15.3-alpine
+COPY --from=build /code/dist/ /usr/share/nginx/html/
+EXPOSE 80
